@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import JobDetail from '../components/JobDetail';
+import { ADZUNA_API_BASE_URL, ADZUNA_APP_ID, ADZUNA_APP_KEY } from '../api/api';
 
 const JobDetailPage = () => {
   const { jobId } = useParams();
@@ -17,9 +18,10 @@ const JobDetailPage = () => {
   useEffect(() => {
     const fetchJob = async () => {
       try {
-        const response = await fetch(
-          `/api/v1/api/jobs/us/search/1?app_id=${import.meta.env.VITE_ADZUNA_APP_ID}&app_key=${import.meta.env.VITE_ADZUNA_APP_KEY}&results_per_page=1&what=${jobId}`
-        );
+        const url = `${ADZUNA_API_BASE_URL}/v1/api/jobs/us/search/1?app_id=${ADZUNA_APP_ID}&app_key=${ADZUNA_APP_KEY}&results_per_page=1&what=${jobId}`;
+        console.log("Fetching job details from URL:", url);
+
+        const response = await fetch(url);
 
         if (!response.ok) {
           throw new Error(`Network response was not ok: ${response.statusText}`);
