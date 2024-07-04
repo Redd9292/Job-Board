@@ -7,8 +7,8 @@ const JobSearch = ({ setFilteredJobs }) => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    const jobs = await fetchJobs(description, location);
-    setFilteredJobs(jobs);
+    const { jobs } = await fetchJobs(description, location);
+    setFilteredJobs(jobs || []);
   };
 
   return (
@@ -35,3 +35,4 @@ const JobSearch = ({ setFilteredJobs }) => {
 };
 
 export default JobSearch;
+

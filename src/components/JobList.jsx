@@ -2,6 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const JobList = ({ jobs, handleBookmark }) => {
+  if (!jobs || jobs.length === 0) {
+    return <p>No jobs found.</p>;
+  }
+
   return (
     <div className="job-list">
       {jobs.map((job) => (
@@ -22,4 +26,3 @@ const JobList = ({ jobs, handleBookmark }) => {
 };
 
 export default JobList;
-

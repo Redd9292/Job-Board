@@ -2,16 +2,29 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import JobDetail from '../components/JobDetail';
 import { ADZUNA_API_BASE_URL, ADZUNA_APP_ID, ADZUNA_APP_KEY } from '../api/api';
+import Notification from '../components/Notification';
 
 const JobDetailPage = () => {
   const { jobId } = useParams();
   const [job, setJob] = useState(null);
+  const [notification, setNotification] = useState(null);
 
   const handleBookmark = (job) => {
     const storedJobs = JSON.parse(localStorage.getItem('bookmarkedJobs')) || [];
     if (!storedJobs.some(storedJob => storedJob.id === job.id)) {
       storedJobs.push(job);
       localStorage.setItem('bookmarkedJobs', JSON.stringify(storedJobs));
+      setNotification({ type: 'success', message: 'Job bookmarked successfully.' });
+      setTimeout(() => {
+        setNotification(null);
+      }, 4000); 
+    } else {
+      const updatedJobs = storedJobs.filter(storedJob => storedJob.id !== job.id);
+      localStorage.setItem('bookmarkedJobs', JSON.stringify(updatedJobs));
+      setNotification({ type: 'error', message: 'Job removed from bookmarks.' });
+      setTimeout(() => {
+        setNotification(null);
+      }, 4000);
     }
   };
 
@@ -45,6 +58,13 @@ const JobDetailPage = () => {
   return (
     <div className="job-detail-page p-4">
       <JobDetail job={job} handleBookmark={handleBookmark} />
+      {notification && (
+        <Notification 
+          type={notification.type} 
+          message={notification.message} 
+          onClose={() => setNotification(null)} 
+        />
+      )}
     </div>
   );
 };

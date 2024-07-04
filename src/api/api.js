@@ -8,8 +8,8 @@ console.log("ADZUNA_APP_KEY:", ADZUNA_APP_KEY);
 
 export { ADZUNA_APP_ID, ADZUNA_APP_KEY, ADZUNA_API_BASE_URL };
 
-export const fetchJobs = async (description = "", location = "") => {
-  const url = `${ADZUNA_API_BASE_URL}/v1/api/jobs/us/search/1?app_id=${ADZUNA_APP_ID}&app_key=${ADZUNA_APP_KEY}&what=${description}&where=${location}`;
+export const fetchJobs = async (description = "", location = "", page = 1) => {
+  const url = `${ADZUNA_API_BASE_URL}/v1/api/jobs/us/search/${page}?app_id=${ADZUNA_APP_ID}&app_key=${ADZUNA_APP_KEY}&what=${description}&where=${location}`;
   console.log("Fetching jobs from URL:", url);
 
   try {
@@ -20,7 +20,17 @@ export const fetchJobs = async (description = "", location = "") => {
     }
     const data = await response.json();
     console.log("API Response Data:", data);
-    return data.results;
+
+    console.log("Total Jobs Count:", data.count);
+    console.log("Results Per Page:", data.results_per_page);
+
+    const totalPages = Math.ceil(data.count / data.results_per_page);
+    console.log("Total Pages:", totalPages);
+
+    return {
+      jobs: data.results,
+      totalPages: totalPages || 1,
+    };
   } catch (error) {
     console.error("Error fetching job details:", error);
     throw error;
