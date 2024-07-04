@@ -29,4 +29,3 @@ const BookmarkedJobs = ({ jobs, handleRemoveBookmark }) => {
 };
 
 export default BookmarkedJobs;
-
